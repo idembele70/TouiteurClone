@@ -1,0 +1,19 @@
+const { resolve } = require("path");
+module.exports = {
+  db: {
+    protocol: "PROTOCOL",
+    user: "USER",
+    password: "PASSWORD",
+    host: "HOST",
+    name: "NAME",
+    options: "OPTIONS",
+  },
+  ssl: {
+    cert: resolve("ssl", "CRT_FILE"),
+    key: resolve("ssl", "KEY_FILE"),
+  },
+  ports: {
+    http: 80,
+    https: 443,
+  },
+};
