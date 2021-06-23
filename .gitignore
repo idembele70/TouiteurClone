@@ -1,4 +1,5 @@
 ssl/*
 !ssl/.gitkeep
 environment/*
-!environment/*~  
+!environment/*~
+node_modules
