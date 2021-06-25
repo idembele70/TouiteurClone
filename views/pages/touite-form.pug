@@ -1,1 +1,13 @@
-h1 formulaire création/éditions de touites
+extend ../layout
+
+
+block content
+
+  h1.text-center.mt-2= addTouite ? "Ecrire un touite" : "Modifier un tweet"
+
+  form(action="/touites/addTouites", method="post", 
+  class="d-flex justify-content-center align-items-center flex-column")
+    input(type="text", class="form-control w-50 my-2", name="message")
+    if error
+      .alert.alert-danger= error
+    button(type="submit" class="btn btn-primary") Ajouter
