@@ -1,4 +1,16 @@
-GET http://localhost:8080/api/users
+GET https://localhost:4433/api/users
 
 ###
-Get http://localhost:8080/api/user/1d79d8ae-f5a5-4827-a27d-728e2417b86b
+Get https://localhost:4433/api/user/1d79d8ae-f5a5-4827-a27d-728e2417b86b
+
+###
+Get https://localhost:4433/users/signup
+###
+POST https://localhost:4433/users/signup
+Content-Type: application/json
+
+{
+    "username": "coco",
+    "email": "coco@mail.fr",
+    "password": "coco"
+}

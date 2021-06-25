@@ -8,6 +8,10 @@ module.exports = {
     name: "NAME",
     options: "OPTIONS",
   },
+  hashRounds: HASH_ROUNDS,
+  jwt : {
+    secret : 'SECRET',
+  },
   ssl: {
     cert: resolve("ssl", "CRT_FILE"),
     key: resolve("ssl", "KEY_FILE"),

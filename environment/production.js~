@@ -7,6 +7,10 @@ module.exports = {
     host: "HOST",
     name: "NAME",
     options: "OPTIONS",
+  },,
+  hashRounds: HASH_ROUNDS,
+  jwt : {
+    secret : 'SECRET',
   },
   ssl: {
     cert: resolve("ssl", "CRT_FILE"),

@@ -1,0 +1,30 @@
+extend ../layout
+
+block content 
+        if signup
+            h1(class="text-center") Formulaire d'inscription
+        else    
+            h1(class="text-center") Formulaire de connexion
+
+        form( method="post" action=signup ?"/users/signup":"/users/signin" class="d-flex flex-column align-items-center" )
+            if signup
+                div(class="mb-3 w-25") 
+                    label(for="username", class="form-label") Pseudo 
+                    input(type="text" class="form-control" name="username" autofocus autoComplete="off" id="username")
+            
+            div(class="mb-3 w-25") 
+                label(for="email", class="form-label") Email 
+                input(type="email" class="form-control" name="email" autoComplete="off" id="email")
+            
+            div(class="mb-3 w-25") 
+                label(for="password", class="form-label") Mot de passe 
+                input(type="password" class="form-control" name="password" autoComplete="off" id="password")
+            if errors 
+              ul.list-group.my-2
+                each error in errors
+                   li(class="list-group-item bg-danger text-light")=error
+            
+            if signup
+                button(type="submit", class="btn btn-primary inline-block mx-auto") Créer mon profil
+            else
+                button(type="submit", class="btn btn-primary inline-block mx-auto") Me connecter
