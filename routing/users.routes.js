@@ -21,6 +21,8 @@ router.get("/signout", signOut);
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 
+//USER
+  //GET
 router.get("/", getAllUsers);
 router.get("/:id", getOneUser);
 

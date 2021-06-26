@@ -54,7 +54,6 @@ exports.signIn = function (req, res) {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 30,
         });
-
         return res.redirect("/");
       }
     })
@@ -65,7 +64,7 @@ exports.signIn = function (req, res) {
 };
 
 exports.signOut = function (req, res) {
-  if (req.cookies.jwt) res.cookie("jwt", "").redirect("/users/signin");
+  if (req.cookies.jwt) res.cookie("jwt", Date.now()).redirect("/users/signin");
 };
 
 exports.getHomePage = function (req, res) {
@@ -100,4 +99,10 @@ exports.getOneUser = function (req, res) {
       console.error(error);
       res.status(500).json({ message: " eror serveur side" });
     });
+};
+
+exports.userProfil = function (req, res) {
+  const { propertyName } = req.body;
+  console.log("inside profile");
+  res.end()
 };

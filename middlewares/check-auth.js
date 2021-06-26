@@ -9,7 +9,6 @@ exports.checkAuth = function (req, res, next) {
     return res.redirect("/users/signin");
   }
   const token = req.cookies.jwt;
-
   try {
     const payload = decode(token, secret);
     if (payload && payload.exp <= moment().unix()) {

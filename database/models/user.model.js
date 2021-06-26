@@ -6,6 +6,7 @@ const userSchema = Schema({
   username: String,
   email: String,
   password: String,
+  follow: Array,
 });
 userSchema.statics.hashPassword = (password) => hashSync(password, hashRounds);
 userSchema.methods.checkPassword = function (password) {

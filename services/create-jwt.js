@@ -10,10 +10,8 @@ exports.createToken = (user) => {
     iat: moment().unix(),
     exp: moment().add(30, "days").unix(),
   };
-
-  delete payload._id;
+  /* delete payload._id; */
   delete payload.password;
 
   return encode(payload, secret);
-  f;
 };
