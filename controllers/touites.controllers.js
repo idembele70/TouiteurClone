@@ -1,5 +1,5 @@
 const Touite = require("../database/models/touite.model");
-
+const url = require("url");
 exports.getTouitesPage = function (req, res) {
   const { username, email, _id } = req.user._doc;
   const information = `${username} (${email})`;
@@ -61,13 +61,19 @@ exports.addTouites = function (req, res) {
 exports.updatesTouitesForm = function (req, res) {
   const { _id: userId } = req.user._doc;
   const { id: _id } = req.params;
-  Touite.findOne({ userId, _id })
+  const newMessage = new URL("https://example.org" + req.url).searchParams.get(
+    "message"
+  );
+
+  Touite.findOneAndUpdate({ userId, _id }, { message: newMessage })
     .exec()
     .then(({ message }) => {
+      if (newMessage) return res.redirect("/");
       res.render("pages/touite-form", {
         addTouite: false,
         signed: true,
-        message,
+        message: newMessage || message,
+        _id,
       });
     })
     .catch((e) => {
@@ -75,8 +81,23 @@ exports.updatesTouitesForm = function (req, res) {
       res.redirect("/");
     });
 };
-exports.updatesTouites = function (req, res) {
+
+exports.deleteTouites = function (req, res) {
+  const { _id: userId } = req.user._doc;
   const { id: _id } = req.params;
-  console.log("updated");
-  res.send("update worked");
+  
+  Touite.findByIdAndDelete({ _id, userId })
+    .exec()
+    .then(() => {
+      console.log("Touite delete");
+       return res.redirect("/");
+    })
+    .catch(console.error);
 };
+
+// DEBUT : J'ai pas reussi a le faire fonctionner donc j'ai bricolé avec le get !
+exports.updatesTouites = function (req, res) {
+  console.log(req.params);
+  res.send("ok");
+};
+// END

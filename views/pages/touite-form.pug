@@ -4,14 +4,10 @@ extend ../layout
 block content
 
     h1.text-center.mt-2= addTouite ? "Ecrire un touite" : "Modifier un tweet"
-    if addTouite
-      form(action="/touites/addTouites", method="post", 
-      class="d-flex justify-content-center align-items-center flex-column")
-    input(type="text", class="form-control w-50 my-2 mx-auto", name="message" value=addTouite?"":message)
-    if error
-      .alert.alert-danger= error
-    div.d-flex.justify-content-center.align-items-center
-    if addTouite
-      button(type="submit" class="btn btn-primary") Ajouter
-    else
-      a(href="/touites/updateTouites/" class="btn btn-primary") Mettre à jour
+
+    form(action= addTouite ?"/touites/addTouites" : "/touites/updateTouites/"+_id , method=addTouite ?"post": "put", 
+    class="d-flex justify-content-center align-items-center flex-column")
+      input(type="text", class="form-control w-50 my-2 mx-auto", name="message" value=addTouite?"":message)
+      if error
+        .alert.alert-danger= error
+      button(type="submit" class="btn btn-primary")= addTouite ? "Ajouter" : "Modifier"
