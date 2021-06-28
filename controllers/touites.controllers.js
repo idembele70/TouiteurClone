@@ -16,15 +16,17 @@ exports.getTouitesPage = function (req, res) {
           touitesAdded,
           username,
         });
-      touites.forEach(({ _id, message }) =>
-        touitesAdded.push({ id: _id, message })
+      touites.forEach(({ _id, message,userId }) =>
+        touitesAdded.push({ id: _id, message,userId })
       );
+      const owner = _id == touitesAdded[0].userId;
       res.render("pages/touites", {
         signed: true,
         information,
         touitesLength,
         touitesAdded,
         username,
+        owner,
       });
     })
     .catch((e) => {
@@ -77,7 +79,7 @@ exports.updatesTouitesForm = function (req, res) {
       });
     })
     .catch((e) => {
-      console.error(e);
+      console.error("error : "+e);
       res.redirect("/");
     });
 };
@@ -85,12 +87,12 @@ exports.updatesTouitesForm = function (req, res) {
 exports.deleteTouites = function (req, res) {
   const { _id: userId } = req.user._doc;
   const { id: _id } = req.params;
-  
+
   Touite.findByIdAndDelete({ _id, userId })
     .exec()
     .then(() => {
       console.log("Touite delete");
-       return res.redirect("/");
+      return res.redirect("/");
     })
     .catch(console.error);
 };

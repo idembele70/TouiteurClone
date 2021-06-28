@@ -1,11 +1,13 @@
-h1 Profile utilisateur
-div.position-relative.h-75
-  img(src="#" class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
-  h3.text-center=information
-  .position-absolute.bottom-0.d-flex.justify-content-between.w-100.px-3
-    span(class="text-center" style="height:50px; width:60px")
-      h5 Touites
-      h6= touitesLength
-    span(class="text-center" style="height:50px; width:60px")
-      h5 Follow
-      h6 1
+if owner
+  h1 Profile utilisateur
+div.d-flex.align-items.center.justify-content-center.flex-column
+    img(src="#" class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
+    h3.text-center=information
+    button.btn.btn-info.text-center.w-25.align-self-center#btn-follow= following ? "Ne plus suivre" : "Suivre"
+    .position-absolute.bottom-0.d-flex.justify-content-between.w-75.start-50.translate-middle
+      span(class="text-center" style="height:50px; width:60px")
+        h5 Touites
+        h6= touitesLength
+      span(class="text-center" style="height:50px; width:60px")
+        h5 Follow
+        h6 0

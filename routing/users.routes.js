@@ -6,24 +6,28 @@ const {
   signOut,
   getAllUsers,
   getOneUser,
+  folowOneUser
 } = require("../controllers/users.controllers");
+const { checkAuth } = require("../middlewares/check-auth");
 
 const router = require("express").Router();
 
 //SIGN
-  //GET
+//GET
 
 router.get("/signup", signUpForm);
 router.get("/signin", signInForm);
 router.get("/signout", signOut);
 
-  //POST
+//POST
 router.post("/signup", signUp);
 router.post("/signin", signIn);
 
-//USER
-  //GET
-router.get("/", getAllUsers);
-router.get("/:id", getOneUser);
+//GET
+router.get("/", checkAuth, getAllUsers);
+router.get("/:id", checkAuth, getOneUser);
+
+// PUT
+router.get('/follow/:id',checkAuth,folowOneUser)
 
 module.exports = router;

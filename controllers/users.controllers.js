@@ -1,3 +1,4 @@
+const touite = require("../database/models/touite.model");
 const User = require("../database/models/user.model");
 const { createToken } = require("../services/create-jwt");
 
@@ -88,12 +89,32 @@ exports.getAllUsers = function (req, res) {
 
 exports.getOneUser = function (req, res) {
   const { id } = req.params;
+  const touitesAdded = [];
+  const information = ``;
+  touite
+    .find({ userId: id })
+    .exec()
+    .then((touites) => touites.forEach((t) => touitesAdded.push(t)))
+    .catch(console.error);
   User.findById(id)
     .exec()
     .then((user) => {
+      const { username, email, follow } = user;
+      const information = `${username} (${email})`;
+      const { _id } = req.user._doc;
+      const following = follow.includes(_id);
+      console.log("follow : " + follow);
+      const owner = _id == touitesAdded[0].userId;
       if (!user || user.length)
         return res.status(404).json({ message: " user not found" });
-      res.status(200).json({ user });
+      res.status(200).render("pages/touites", {
+        touitesAdded,
+        information,
+        touitesLength: touitesAdded.length,
+        owner,
+        signed: true,
+        following,
+      });
     })
     .catch((error) => {
       console.error(error);
@@ -101,8 +122,13 @@ exports.getOneUser = function (req, res) {
     });
 };
 
-exports.userProfil = function (req, res) {
-  const { propertyName } = req.body;
-  console.log("inside profile");
-  res.end()
+exports.folowOneUser = async function (req, res) {
+  const { id } = req.params;
+  const { _id: reqUserId } = req.user._doc;
+  const user = await User.findOne({ _id: id });
+  const newFollow = [...user.follow];
+  if (!newFollow.includes(reqUserId)) newFollow.push(reqUserId);
+  else newFollow.splice(reqUserId, 1);
+  console.log("newFollow" + newFollow);
+  const userUpdated = await User.updateOne({ _id: id }, { follow: newFollow });
 };
