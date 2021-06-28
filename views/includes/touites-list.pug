@@ -11,5 +11,7 @@ each touite in touitesAdded
     if owner
       a(href="/touites/updateTouites/"+touite.id)
         img(src="/static/img/pen-solid.svg" class="d-inline" style="height:20px; width: 20px;")
-      a(href="/touites/deleteTouites/"+touite.id+"?delete=true")
-        img(src="/static/img/trash-alt-solid.svg" class="d-inline" style="height:20px; width: 20px; cursor:pointer")
+      form(method="POST", action="/touites/deleteTouites/"+touite.id+"?_method=DELETE") 
+        button(type="submit", style="background: transparent;border: none;")
+         img(src="/static/img/trash-alt-solid.svg" class="d-inline" style="height:20px; width: 20px; cursor:pointer")
+ 

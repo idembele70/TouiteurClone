@@ -5,7 +5,7 @@ block content
 
     h1.text-center.mt-2= addTouite ? "Ecrire un touite" : "Modifier un tweet"
 
-    form(action= addTouite ?"/touites/addTouites" : "/touites/updateTouites/"+_id , method=addTouite ?"post": "put", 
+    form(action= addTouite ?"/touites/addTouites" : "/touites/updateTouites/"+_id+"?_method=PUT" , method="post", 
     class="d-flex justify-content-center align-items-center flex-column")
       input(type="text", class="form-control w-50 my-2 mx-auto", name="message" value=addTouite?"":message)
       if error

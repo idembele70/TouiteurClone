@@ -1,5 +1,4 @@
 const Touite = require("../database/models/touite.model");
-const url = require("url");
 exports.getTouitesPage = function (req, res) {
   const { username, email, _id } = req.user._doc;
   const information = `${username} (${email})`;
@@ -16,10 +15,11 @@ exports.getTouitesPage = function (req, res) {
           touitesAdded,
           username,
         });
-      touites.forEach(({ _id, message,userId }) =>
-        touitesAdded.push({ id: _id, message,userId })
+      touites.forEach(({ _id, message, userId }) =>
+        touitesAdded.push({ id: _id, message, userId })
       );
       const owner = _id == touitesAdded[0].userId;
+      console.log(owner);
       res.render("pages/touites", {
         signed: true,
         information,
@@ -61,34 +61,37 @@ exports.addTouites = function (req, res) {
 };
 
 exports.updatesTouitesForm = function (req, res) {
-  const { _id: userId } = req.user._doc;
   const { id: _id } = req.params;
-  const newMessage = new URL("https://example.org" + req.url).searchParams.get(
-    "message"
-  );
 
-  Touite.findOneAndUpdate({ userId, _id }, { message: newMessage })
+  Touite.findById({ _id })
     .exec()
-    .then(({ message }) => {
-      if (newMessage) return res.redirect("/");
+    .then((touite) => {
       res.render("pages/touite-form", {
         addTouite: false,
         signed: true,
-        message: newMessage || message,
         _id,
+        message: touite.message,
       });
     })
     .catch((e) => {
-      console.error("error : "+e);
+      console.error("error : " + e);
       res.redirect("/");
     });
 };
 
-exports.deleteTouites = function (req, res) {
-  const { _id: userId } = req.user._doc;
+exports.updatesTouites = function (req, res) {
   const { id: _id } = req.params;
+  const { message } = req.body;
+  Touite.findByIdAndUpdate({ _id }, { message }, (err) => {
+    if (err) return console.error(err);
+    console.log("success");
+    res.redirect("/");
+  });
+};
 
-  Touite.findByIdAndDelete({ _id, userId })
+exports.deleteTouites = function (req, res) {
+  const { id: _id } = req.params;
+  Touite.findByIdAndDelete({ _id })
     .exec()
     .then(() => {
       console.log("Touite delete");
@@ -96,10 +99,3 @@ exports.deleteTouites = function (req, res) {
     })
     .catch(console.error);
 };
-
-// DEBUT : J'ai pas reussi a le faire fonctionner donc j'ai bricolé avec le get !
-exports.updatesTouites = function (req, res) {
-  console.log(req.params);
-  res.send("ok");
-};
-// END

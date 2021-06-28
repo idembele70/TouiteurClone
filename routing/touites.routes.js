@@ -15,11 +15,14 @@ const {
 router.get("/", getTouitesPage);
 router.get("/addTouites", addTouitesForm);
 router.get("/updateTouites/:id", updatesTouitesForm);
-router.get("/deleteTouites/:id", deleteTouites);
-router.delete("/deleteTouites/:id", deleteTouites);
+
 /* POST */
 router.post("/addTouites", addTouites);
+
+/* DELETE */
+router.delete("/deleteTouites/:id", deleteTouites);
+
 /* PUT */
-/* router.put("/updateTouites/:id", updatesTouites); */
+router.put("/updateTouites/:id", updatesTouites);
 
 module.exports = router;
