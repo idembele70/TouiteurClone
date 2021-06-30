@@ -3,6 +3,6 @@ header(class="d-flex align-items-center justify-content-between p-2 bg-info")
       a(href="/")
         img(src="/static/img/touiteur.png" width="40px")
       if signed
-        input(type="text" class="form-control d-inline w-75 ms-2" name="findUsers" id="userFinder" placeholder="Chercher un profil")
-        div.searchItemsContainer#searchContainer
+        input(type="text" aria-owns="owned_listbox" class="form-control d-inline w-75 ms-2" name="findUsers" id="userFinder" placeholder="Chercher un profil")
+        ul.searchItemsContainer#owned_listbox
     include ./navbar
