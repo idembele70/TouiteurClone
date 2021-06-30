@@ -7,6 +7,10 @@ const userSchema = Schema({
   email: String,
   password: String,
   follow: Array,
+  avatar : {
+    type : String,
+    default : "1625063126462-avatar1.png"
+  }
 });
 userSchema.statics.hashPassword = (password) => hashSync(password, hashRounds);
 userSchema.methods.checkPassword = function (password) {

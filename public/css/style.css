@@ -12,3 +12,7 @@ main {
 footer {
   grid-area: 3 / 1 / -1 / -1;
 }
+/* USER PROFILE STYLESS */
+#avatar,#addAvatar {
+  display: none;
+}

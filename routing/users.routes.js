@@ -6,10 +6,11 @@ const {
   signOut,
   getAllUsers,
   getOneUser,
-  folowOneUser
+  folowOneUser,
+  changePicture,
 } = require("../controllers/users.controllers");
 const { checkAuth } = require("../middlewares/check-auth");
-
+const upload = require("../middlewares/add-picture");
 const router = require("express").Router();
 
 //SIGN
@@ -28,6 +29,6 @@ router.get("/", checkAuth, getAllUsers);
 router.get("/:id", checkAuth, getOneUser);
 
 // PUT
-router.get('/follow/:id',checkAuth,folowOneUser)
-
+router.get("/follow/:id", checkAuth, folowOneUser);
+router.put("/picture/:id", upload.single('avatar'),changePicture);
 module.exports = router;

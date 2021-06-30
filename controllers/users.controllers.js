@@ -90,7 +90,6 @@ exports.getAllUsers = function (req, res) {
 exports.getOneUser = function (req, res) {
   const { id } = req.params;
   const touitesAdded = [];
-  const information = ``;
   touite
     .find({ userId: id })
     .exec()
@@ -99,21 +98,22 @@ exports.getOneUser = function (req, res) {
   User.findById(id)
     .exec()
     .then((user) => {
-      const { username, email, follow } = user;
+      const { username, email, follow, avatar } = user;
       const information = `${username} (${email})`;
       const { _id } = req.user._doc;
       const following = follow.includes(_id);
-      console.log("follow : " + follow);
-      const owner = _id == touitesAdded[0].userId;
-      if (!user || user.length)
-        return res.status(404).json({ message: " user not found" });
+      if (touitesAdded[0])
+        if (!user || user.length)
+          return res.status(404).json({ message: " user not found" });
       res.status(200).render("pages/touites", {
         touitesAdded,
         information,
         touitesLength: touitesAdded.length,
-        owner,
+        owner: _id == id,
         signed: true,
         following,
+        id,
+        avatar,
       });
     })
     .catch((error) => {
@@ -131,4 +131,14 @@ exports.folowOneUser = async function (req, res) {
   else newFollow.splice(reqUserId, 1);
   console.log("newFollow" + newFollow);
   const userUpdated = await User.updateOne({ _id: id }, { follow: newFollow });
+};
+
+exports.changePicture = function (req, res) {
+  const { id } = req.params;
+  const avatar = req.newName;
+  User.findByIdAndUpdate(id, { avatar }, (err) => {
+    if (err) return console.error("Error changePicture controller : ", err);
+    console.log("New picture added to DB");
+  });
+  res.redirect("/");
 };

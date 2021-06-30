@@ -1,7 +1,12 @@
 if owner
   h1 Profile utilisateur
 div.d-flex.align-items.center.justify-content-center.flex-column
-    img(src="#" class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
+    form(action="users/picture/"+id+"?_method=PUT", method="post", enctype="multipart/form-data") 
+      label(for="avatar" class="w-100")
+        img(src="/static/assets/profile-picture/"+avatar class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
+      if owner
+        input(type="file",name="avatar" ,id="avatar")
+      button(type="submit", id="addAvatar") 
     h3.text-center=information
     unless owner
       button.btn.btn-info.text-center.w-25.align-self-center#btn-follow= following ? "Ne plus suivre" : "Suivre"

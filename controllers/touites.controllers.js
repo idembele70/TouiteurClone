@@ -1,7 +1,15 @@
 const Touite = require("../database/models/touite.model");
-exports.getTouitesPage = function (req, res) {
-  const { username, email, _id } = req.user._doc;
+const User = require("../database/models/user.model");
+exports.getTouitesPage = async function (req, res) {
+  const {_id} = req.user._doc;
+  await User.findById(_id, function (err, user) {
+    if (err) return console.error("get Touite page error : ", err);
+    req.user._doc.avatar = user.avatar;
+    console.log("user avatar : ", user.id);
+  });
+  const { username, email, avatar } = req.user._doc;
   const information = `${username} (${email})`;
+
   Touite.find({ userId: _id })
     .exec()
     .then((touites) => {
@@ -14,19 +22,23 @@ exports.getTouitesPage = function (req, res) {
           touitesLength,
           touitesAdded,
           username,
+          avatar,
+          id: _id,
+          owner : true
         });
       touites.forEach(({ _id, message, userId }) =>
         touitesAdded.push({ id: _id, message, userId })
       );
-      const owner = _id == touitesAdded[0].userId;
-      console.log(owner);
+     /*  const owner = _id == touitesAdded[0].userId; */
       res.render("pages/touites", {
         signed: true,
         information,
         touitesLength,
         touitesAdded,
         username,
-        owner,
+        owner : true,
+        id: _id,
+        avatar,
       });
     })
     .catch((e) => {
