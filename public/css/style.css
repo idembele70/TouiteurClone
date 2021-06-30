@@ -16,3 +16,11 @@ footer {
 #avatar,#addAvatar {
   display: none;
 }
+
+.searchItemsContainer{
+  position: absolute;
+  width: 180px;
+  background: red;
+  z-index: 2;
+  left: 58px;
+}

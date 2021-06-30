@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const touiteSchema = Schema({
   message: String,
-  userId: String,
+  from: String,
 });
 
 const touite = model("touites", touiteSchema);

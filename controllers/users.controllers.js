@@ -79,7 +79,8 @@ exports.getAllUsers = function (req, res) {
       if (!users || !users.length) {
         return res.status(404).json({ message: "users not found" });
       }
-      res.status(200).json({ users });
+      console.log("getting all users !");
+      return res.status(200).json({ users });
     })
     .catch((error) => {
       console.error(error);
@@ -117,7 +118,7 @@ exports.getOneUser = function (req, res) {
       });
     })
     .catch((error) => {
-      console.error(error);
+      console.error("erreur sur getOneUser :", error);
       res.status(500).json({ message: " eror serveur side" });
     });
 };

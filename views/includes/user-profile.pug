@@ -3,7 +3,10 @@ if owner
 div.d-flex.align-items.center.justify-content-center.flex-column
     form(action="users/picture/"+id+"?_method=PUT", method="post", enctype="multipart/form-data") 
       label(for="avatar" class="w-100")
-        img(src="/static/assets/profile-picture/"+avatar class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
+        if owner
+          img(src="/static/assets/profile-picture/"+ownerAvatar class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
+        else
+          img(src="/static/assets/profile-picture/"+avatar class="d-block mx-auto" style="height:100px; width: 100px; border-radius: 50%")
       if owner
         input(type="file",name="avatar" ,id="avatar")
       button(type="submit", id="addAvatar") 
@@ -13,7 +16,7 @@ div.d-flex.align-items.center.justify-content-center.flex-column
     .position-absolute.bottom-0.d-flex.justify-content-between.w-75.start-50.translate-middle
       span(class="text-center" style="height:50px; width:60px")
         h5 Touites
-        h6= touitesLength
+        h6= touitesAdded.length
       span(class="text-center" style="height:50px; width:60px")
         h5 Follow
         h6 0

@@ -1,44 +1,42 @@
 const Touite = require("../database/models/touite.model");
 const User = require("../database/models/user.model");
 exports.getTouitesPage = async function (req, res) {
-  const {_id} = req.user._doc;
-  await User.findById(_id, function (err, user) {
+  const { _id } = req.user._doc;
+ await User.findById(_id, function (err, user) {
     if (err) return console.error("get Touite page error : ", err);
     req.user._doc.avatar = user.avatar;
-    console.log("user avatar : ", user.id);
   });
-  const { username, email, avatar } = req.user._doc;
+  const { username, email, avatar : ownerAvatar } = req.user._doc;
   const information = `${username} (${email})`;
-
-  Touite.find({ userId: _id })
+  Touite.find({})
     .exec()
-    .then((touites) => {
-      const touitesLength = touites.length || 0;
-      const touitesAdded = [] || 0;
-      if (!touites.length)
+    .then(async (touites) => {
+      const touitesAdded = [];
+      if (!touites.length) {
         return res.render("pages/touites", {
           signed: true,
           information,
-          touitesLength,
           touitesAdded,
           username,
-          avatar,
+          ownerAvatar,
           id: _id,
-          owner : true
+          owner: true,
         });
-      touites.forEach(({ _id, message, userId }) =>
-        touitesAdded.push({ id: _id, message, userId })
-      );
-     /*  const owner = _id == touitesAdded[0].userId; */
-      res.render("pages/touites", {
-        signed: true,
-        information,
-        touitesLength,
-        touitesAdded,
-        username,
-        owner : true,
-        id: _id,
-        avatar,
+      }
+
+      touites.forEach(async ({ _id: id, message, from }, i) => {
+        const user = await User.findOne({ username: from }).exec();
+        touitesAdded.push({ id, message, from, avatar: user.avatar });
+        if (i + 1 == touites.length)
+          res.render("pages/touites", {
+            signed: true,
+            information,
+            touitesAdded,
+            username,
+            owner: true,
+            id: _id,
+            ownerAvatar
+          });
       });
     })
     .catch((e) => {
@@ -56,8 +54,8 @@ exports.addTouitesForm = function (req, res) {
 
 exports.addTouites = function (req, res) {
   const { message } = req.body;
-  const { _id: userId } = req.user._doc;
-  const touite = new Touite({ message, userId });
+  const { username: from } = req.user._doc;
+  const touite = new Touite({ message, from });
   touite
     .save()
     .then(() => {
