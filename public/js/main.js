@@ -25,18 +25,15 @@ if (document.getElementById("userFinder")) {
       })
       .catch(console.error);
   };
-  userFinder.onblur = () => {
-    console.log("lose focus");
+  document.onclick = (e) => {
+    if (e.target == userFinder || e.target == owned_listbox) return;
+    owned_listbox.innerHTML = "";
   };
 }
-
-function wait(duration) {
-  const debut = Date.now();
-  while (Date.now() - debut < duration);
-}
-
 function searchBarItems({ id, username, avatar }) {
-  return `<li class="list-group-item" style="width:200px; z-index: 2">
+  return `
+  <a href="/users/${id}" style="width:200px; text-decoration: none;" >
+  <li class="list-group-item" style="width:200px;">
       <div class="row">
         <div class="col-6">
           <img
@@ -44,10 +41,21 @@ function searchBarItems({ id, username, avatar }) {
             style="width:40px"
             alt="profile picture"
           />
-        </div>
-        <div class="col-6">
-          <a href="/users/${id}">${username}</a>
+          </div>
+          <div class="col-6 text-center" style="line-height:40px">
+          ${username}
         </div>
       </div>
-    </li>`;
+      </li>
+  </a>
+    `;
+}
+
+if (document.getElementById("btn-follow")) {
+  const btnFollow = document.getElementById("btn-follow");
+  btnFollow.onclick = (e) => {
+    e.preventDefault();
+    fetch(e.target.href, { method: "PUT" });
+    location.reload()
+  };
 }

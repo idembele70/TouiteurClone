@@ -5,8 +5,9 @@ exports.getTouitesPage = async function (req, res) {
  await User.findById(_id, function (err, user) {
     if (err) return console.error("get Touite page error : ", err);
     req.user._doc.avatar = user.avatar;
+    req.user._doc.follow = user.follow;
   });
-  const { username, email, avatar : ownerAvatar } = req.user._doc;
+  const { username, email, avatar,follow } = req.user._doc;
   const information = `${username} (${email})`;
   Touite.find({})
     .exec()
@@ -18,9 +19,10 @@ exports.getTouitesPage = async function (req, res) {
           information,
           touitesAdded,
           username,
-          ownerAvatar,
+          avatar,
           id: _id,
           owner: true,
+       
         });
       }
 
@@ -35,7 +37,8 @@ exports.getTouitesPage = async function (req, res) {
             username,
             owner: true,
             id: _id,
-            ownerAvatar
+            avatar,
+            nbFollower :follow.length
           });
       });
     })

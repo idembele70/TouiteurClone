@@ -98,11 +98,11 @@ exports.getOneUser = function (req, res) {
     .catch(console.error);
   User.findById(id)
     .exec()
-    .then((user) => {
-      const { username, email, follow, avatar } = user;
+    .then(async (user) => {
+      const { username, email, avatar } = user;
       const information = `${username} (${email})`;
-      const { _id } = req.user._doc;
-      const following = follow.includes(_id);
+      const { _id, } = req.user._doc;
+      const reqUser = await User.findById(_id);
       if (touitesAdded[0])
         if (!user || user.length)
           return res.status(404).json({ message: " user not found" });
@@ -112,9 +112,10 @@ exports.getOneUser = function (req, res) {
         touitesLength: touitesAdded.length,
         owner: _id == id,
         signed: true,
-        following,
+        following: reqUser.follow.includes(id),
         id,
         avatar,
+        nbFollower : user.follow.length,
       });
     })
     .catch((error) => {
@@ -126,12 +127,11 @@ exports.getOneUser = function (req, res) {
 exports.folowOneUser = async function (req, res) {
   const { id } = req.params;
   const { _id: reqUserId } = req.user._doc;
-  const user = await User.findOne({ _id: id });
+  const user = await User.findOne({ _id: reqUserId });
   const newFollow = [...user.follow];
-  if (!newFollow.includes(reqUserId)) newFollow.push(reqUserId);
-  else newFollow.splice(reqUserId, 1);
-  console.log("newFollow" + newFollow);
-  const userUpdated = await User.updateOne({ _id: id }, { follow: newFollow });
+  if (!newFollow.includes(id)) newFollow.push(id);
+  else newFollow.splice(id, 1);
+  await User.updateOne({ _id: reqUserId }, { follow: newFollow });
 };
 
 exports.changePicture = function (req, res) {

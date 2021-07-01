@@ -29,6 +29,6 @@ router.get("/", checkAuth, getAllUsers);
 router.get("/:id", checkAuth, getOneUser);
 
 // PUT
-router.get("/follow/:id", checkAuth, folowOneUser);
+router.put("/follow/:id", checkAuth, folowOneUser);
 router.put("/picture/:id", upload.single('avatar'),changePicture);
 module.exports = router;
