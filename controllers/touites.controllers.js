@@ -2,17 +2,16 @@ const Touite = require("../database/models/touite.model");
 const User = require("../database/models/user.model");
 exports.getTouitesPage = async function (req, res) {
   const { _id } = req.user._doc;
- await User.findById(_id, function (err, user) {
+  await User.findById(_id, function (err, user) {
     if (err) return console.error("get Touite page error : ", err);
     req.user._doc.avatar = user.avatar;
     req.user._doc.follow = user.follow;
   });
-  const { username, email, avatar,follow } = req.user._doc;
+  const { username, email, avatar, follow } = req.user._doc;
   const information = `${username} (${email})`;
-  Touite.find({})
+  Touite.find({ from: { $in: [...follow, username] } })
     .exec()
     .then(async (touites) => {
-      const touitesAdded = [];
       if (!touites.length) {
         return res.render("pages/touites", {
           signed: true,
@@ -22,24 +21,26 @@ exports.getTouitesPage = async function (req, res) {
           avatar,
           id: _id,
           owner: true,
-       
+          nbFollower: follow.length,
         });
       }
-
-      touites.forEach(async ({ _id: id, message, from }, i) => {
-        const user = await User.findOne({ username: from }).exec();
-        touitesAdded.push({ id, message, from, avatar: user.avatar });
-        if (i + 1 == touites.length)
-          res.render("pages/touites", {
-            signed: true,
-            information,
-            touitesAdded,
-            username,
-            owner: true,
-            id: _id,
-            avatar,
-            nbFollower :follow.length
-          });
+      const touitesAdded = [];
+      for (let i = 0; i < touites.length; i++) {
+        const { _id: id, message, from } = touites[i];
+        console.log(i, touites[i]);
+        const curentUser = await User.findOne({ username: from });
+        touitesAdded.push({ id, message,from, avatar: curentUser.avatar });
+      }
+      /* console.log("touites addes", touitesAdded); */
+      res.render("pages/touites", {
+        signed: true,
+        information,
+        touitesAdded,
+        username,
+        owner: true,
+        id: _id,
+        avatar,
+        nbFollower: follow.length,
       });
     })
     .catch((e) => {
@@ -112,3 +113,4 @@ exports.deleteTouites = function (req, res) {
     })
     .catch(console.error);
 };
+
