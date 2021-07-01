@@ -53,9 +53,15 @@ function searchBarItems({ id, username, avatar }) {
 
 if (document.getElementById("btn-follow")) {
   const btnFollow = document.getElementById("btn-follow");
-  btnFollow.onclick = (e) => {
+  btnFollow.onclick = async (e) => {
     e.preventDefault();
     fetch(e.target.href, { method: "PUT" });
-    location.reload()
+    wait(300);
+    location.reload();
   };
+}
+
+function wait(duration) {
+  const debut = Date.now();
+  while (Date.now() - debut < duration);
 }

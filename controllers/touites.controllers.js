@@ -12,6 +12,7 @@ exports.getTouitesPage = async function (req, res) {
   Touite.find({ from: { $in: [...follow, username] } })
     .exec()
     .then(async (touites) => {
+      const touitesAdded = [];
       if (!touites.length) {
         return res.render("pages/touites", {
           signed: true,
@@ -24,7 +25,6 @@ exports.getTouitesPage = async function (req, res) {
           nbFollower: follow.length,
         });
       }
-      const touitesAdded = [];
       for (let i = 0; i < touites.length; i++) {
         const { _id: id, message, from } = touites[i];
         console.log(i, touites[i]);

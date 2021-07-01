@@ -88,15 +88,10 @@ exports.getAllUsers = function (req, res) {
     });
 };
 
-//A faire :  lorsque on follow le button follow change de label 
+//A faire :  lorsque on follow le button follow change de label
 exports.getOneUser = function (req, res) {
   const { id } = req.params;
   const touitesAdded = [];
-  touite
-    .find({ userId: id })
-    .exec()
-    .then((touites) => touites.forEach((t) => touitesAdded.push(t)))
-    .catch(console.error);
   User.findById(id)
     .exec()
     .then(async (user) => {
@@ -104,6 +99,12 @@ exports.getOneUser = function (req, res) {
       const information = `${username} (${email})`;
       const { _id } = req.user._doc;
       const reqUser = await User.findById(_id);
+      console.log(reqUser);
+      const touites = await touite.find({ from: username });
+      for (const touite of touites) {
+        const { _id: id, from, message } = touite;
+        touitesAdded.push({ id, from, message, avatar });
+      }
       if (touitesAdded[0])
         if (!user || user.length)
           return res.status(404).json({ message: " user not found" });
@@ -146,3 +147,4 @@ exports.changePicture = function (req, res) {
   });
   res.redirect("/");
 };
+

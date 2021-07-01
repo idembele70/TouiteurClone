@@ -30,5 +30,5 @@ router.get("/:id", checkAuth, getOneUser);
 
 // PUT
 router.put("/follow/:id", checkAuth, folowOneUser);
-router.put("/picture/:id", upload.single('avatar'),changePicture);
+router.put("/picture/:id", upload.single("avatar"), changePicture);
 module.exports = router;
